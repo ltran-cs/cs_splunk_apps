@@ -1,0 +1,468 @@
+{
+    "modelName": "cs_system_metrics",
+    "displayName": "CS System Metrics",
+    "description": "",
+    "objectSummary": {
+        "Event-Based": 2,
+        "Transaction-Based": 0,
+        "Search-Based": 0
+    },
+    "objects": [
+        {
+            "objectName": "system",
+            "displayName": "system",
+            "parentName": "BaseEvent",
+            "comment": "",
+            "fields": [
+                {
+                    "fieldName": "aggQueue",
+                    "owner": "system",
+                    "type": "number",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false,
+                    "editable": true,
+                    "displayName": "aggQueue",
+                    "comment": ""
+                },
+                {
+                    "fieldName": "available",
+                    "owner": "system",
+                    "type": "number",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false,
+                    "editable": true,
+                    "displayName": "available",
+                    "comment": ""
+                },
+                {
+                    "fieldName": "average_KBps",
+                    "owner": "system",
+                    "type": "number",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false,
+                    "editable": true,
+                    "displayName": "average_KBps",
+                    "comment": ""
+                },
+                {
+                    "fieldName": "capacity",
+                    "owner": "system",
+                    "type": "number",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false,
+                    "editable": true,
+                    "displayName": "capacity",
+                    "comment": ""
+                },
+                {
+                    "fieldName": "cpu_count",
+                    "owner": "system",
+                    "type": "number",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false,
+                    "editable": true,
+                    "displayName": "cpu_count",
+                    "comment": ""
+                },
+                {
+                    "fieldName": "cpu_system_pct",
+                    "owner": "system",
+                    "type": "number",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false,
+                    "editable": true,
+                    "displayName": "cpu_system_pct",
+                    "comment": ""
+                },
+                {
+                    "fieldName": "cpu_user_pct",
+                    "owner": "system",
+                    "type": "number",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false,
+                    "editable": true,
+                    "displayName": "cpu_user_pct",
+                    "comment": ""
+                },
+                {
+                    "fieldName": "free",
+                    "owner": "system",
+                    "type": "number",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false,
+                    "editable": true,
+                    "displayName": "free",
+                    "comment": ""
+                },
+                {
+                    "fieldName": "fs_type",
+                    "owner": "system",
+                    "type": "string",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false,
+                    "editable": true,
+                    "displayName": "fs_type",
+                    "comment": ""
+                },
+                {
+                    "fieldName": "indexQueue",
+                    "owner": "system",
+                    "type": "number",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false,
+                    "editable": true,
+                    "displayName": "indexQueue",
+                    "comment": ""
+                },
+                {
+                    "fieldName": "mem",
+                    "owner": "system",
+                    "type": "number",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false,
+                    "editable": true,
+                    "displayName": "mem",
+                    "comment": ""
+                },
+                {
+                    "fieldName": "mem_used",
+                    "owner": "system",
+                    "type": "number",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false,
+                    "editable": true,
+                    "displayName": "mem_used",
+                    "comment": ""
+                },
+                {
+                    "fieldName": "mount_point",
+                    "owner": "system",
+                    "type": "string",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false,
+                    "editable": true,
+                    "displayName": "mount_point",
+                    "comment": ""
+                },
+                {
+                    "fieldName": "normalized_load_avg_1min",
+                    "owner": "system",
+                    "type": "number",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false,
+                    "editable": true,
+                    "displayName": "normalized_load_avg_1min",
+                    "comment": ""
+                },
+                {
+                    "fieldName": "orig_splunk_server",
+                    "owner": "system",
+                    "type": "string",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false,
+                    "editable": true,
+                    "displayName": "orig_splunk_server",
+                    "comment": ""
+                },
+                {
+                    "fieldName": "parsingQueue",
+                    "owner": "system",
+                    "type": "number",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false,
+                    "editable": true,
+                    "displayName": "parsingQueue",
+                    "comment": ""
+                },
+                {
+                    "fieldName": "pset_count",
+                    "owner": "system",
+                    "type": "number",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false,
+                    "editable": true,
+                    "displayName": "pset_count",
+                    "comment": ""
+                },
+                {
+                    "fieldName": "status",
+                    "owner": "system",
+                    "type": "string",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false,
+                    "editable": true,
+                    "displayName": "status",
+                    "comment": ""
+                },
+                {
+                    "fieldName": "typingQueue",
+                    "owner": "system",
+                    "type": "string",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false,
+                    "editable": true,
+                    "displayName": "typingQueue",
+                    "comment": ""
+                },
+                {
+                    "fieldName": "virtual_cpu_count",
+                    "owner": "system",
+                    "type": "string",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false,
+                    "editable": true,
+                    "displayName": "virtual_cpu_count",
+                    "comment": ""
+                },
+                {
+                    "fieldName": "_time",
+                    "owner": "BaseEvent",
+                    "type": "timestamp",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false,
+                    "editable": true,
+                    "displayName": "_time",
+                    "comment": ""
+                },
+                {
+                    "fieldName": "host",
+                    "owner": "BaseEvent",
+                    "type": "string",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false,
+                    "editable": true,
+                    "displayName": "host",
+                    "comment": ""
+                },
+                {
+                    "fieldName": "source",
+                    "owner": "BaseEvent",
+                    "type": "string",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false,
+                    "editable": true,
+                    "displayName": "source",
+                    "comment": ""
+                },
+                {
+                    "fieldName": "sourcetype",
+                    "owner": "BaseEvent",
+                    "type": "string",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false,
+                    "editable": true,
+                    "displayName": "sourcetype",
+                    "comment": ""
+                }
+            ],
+            "calculations": [],
+            "constraints": [
+                {
+                    "search": "index=_internal type=cs_system_metrics",
+                    "owner": "system"
+                }
+            ],
+            "lineage": "system"
+        },
+        {
+            "objectName": "partition",
+            "displayName": "partition",
+            "parentName": "BaseEvent",
+            "comment": "",
+            "fields": [
+                {
+                    "fieldName": "available",
+                    "owner": "partition",
+                    "type": "number",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false,
+                    "editable": true,
+                    "displayName": "available",
+                    "comment": ""
+                },
+                {
+                    "fieldName": "capacity",
+                    "owner": "partition",
+                    "type": "number",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false,
+                    "editable": true,
+                    "displayName": "capacity",
+                    "comment": ""
+                },
+                {
+                    "fieldName": "free",
+                    "owner": "partition",
+                    "type": "number",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false,
+                    "editable": true,
+                    "displayName": "free",
+                    "comment": ""
+                },
+                {
+                    "fieldName": "fs_type",
+                    "owner": "partition",
+                    "type": "string",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false,
+                    "editable": true,
+                    "displayName": "fs_type",
+                    "comment": ""
+                },
+                {
+                    "fieldName": "mount_point",
+                    "owner": "partition",
+                    "type": "string",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false,
+                    "editable": true,
+                    "displayName": "mount_point",
+                    "comment": ""
+                },
+                {
+                    "fieldName": "orig_splunk_server",
+                    "owner": "partition",
+                    "type": "string",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false,
+                    "editable": true,
+                    "displayName": "orig_splunk_server",
+                    "comment": ""
+                },
+                {
+                    "fieldName": "type",
+                    "owner": "partition",
+                    "type": "string",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false,
+                    "editable": true,
+                    "displayName": "type",
+                    "comment": ""
+                },
+                {
+                    "fieldName": "_time",
+                    "owner": "BaseEvent",
+                    "type": "timestamp",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false,
+                    "editable": true,
+                    "displayName": "_time",
+                    "comment": ""
+                },
+                {
+                    "fieldName": "host",
+                    "owner": "BaseEvent",
+                    "type": "string",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false,
+                    "editable": true,
+                    "displayName": "host",
+                    "comment": ""
+                },
+                {
+                    "fieldName": "source",
+                    "owner": "BaseEvent",
+                    "type": "string",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false,
+                    "editable": true,
+                    "displayName": "source",
+                    "comment": ""
+                },
+                {
+                    "fieldName": "sourcetype",
+                    "owner": "BaseEvent",
+                    "type": "string",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false,
+                    "editable": true,
+                    "displayName": "sourcetype",
+                    "comment": ""
+                }
+            ],
+            "calculations": [],
+            "constraints": [
+                {
+                    "search": "index=_internal type=cs_partition",
+                    "owner": "partition"
+                }
+            ],
+            "lineage": "partition"
+        }
+    ],
+    "objectNameList": [
+        "system",
+        "partition"
+    ]
+}

@@ -1,0 +1,215 @@
+<form theme="dark">
+  <label>Alerting Metrics</label>
+  <search>
+    <query>| rest splunk_server=local /services/data/models | search title=cs_system_metrics </query>
+    <progress>
+      <condition match="'job.resultCount' == 0">
+        <set token="no_results">true</set>
+        <unset token="has_results"></unset>
+      </condition>
+      <condition>
+        <set token="has_results">true</set>
+        <unset token="no_results"></unset>
+      </condition>
+    </progress>
+  </search>
+  <fieldset submitButton="false">
+    <input type="time" token="field1">
+      <label></label>
+      <default>
+        <earliest>-24h@h</earliest>
+        <latest>now</latest>
+      </default>
+    </input>
+  </fieldset>
+  <row>
+    <panel depends="$no_results$">
+      <html>
+                <body>
+                    <h1/>
+                    <div class="setup-center">
+                        <p class="setup-text">Thank you for installing the Critical Start App for Splunk! There are a few things you need to do to get started:</p>
+                        <br/>
+                       <p class="setup-text">Install Alerting Add-on</p>
+                    </div>
+                </body>
+            </html>
+    </panel>
+  </row>
+  <row>
+    <panel depends="$has_results$">
+      <title>Top 10 Alerts</title>
+      <table>
+        <search>
+          <query>index=_internal sourcetype="scheduler" result_count&gt;0 
+| search 
+    [| rest /servicesNS/-/-/saved/searches splunk_server=*-SH-*
+    | search actions!="" NOT actions IN (populate_lookup outputtelemetry lookup) (alert_condition!="" OR alert_threshold!="") 
+    | table title 
+    | rename title as savedsearch_name] 
+| chart sparkline count by savedsearch_name 
+|  rename savedsearch_name as Alerts
+|  sort - count
+|  head 10 
+| fields Alerts, sparkline 
+| rename Alerts as " ", sparkline as "  "</query>
+          <earliest>$field1.earliest$</earliest>
+          <latest>$field1.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="count">20</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="percentagesRow">false</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="rowNumbers">false</option>
+        <option name="totalsRow">false</option>
+        <option name="wrap">true</option>
+      </table>
+    </panel>
+    <panel depends="$has_results$">
+      <title>ZTAP Alerts</title>
+      <chart>
+        <search>
+          <query>index="_internal" sourcetype=splunkd invoking 
+| stats count by search</query>
+          <earliest>$field1.earliest$</earliest>
+          <latest>$field1.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
+        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
+        <option name="charting.axisTitleX.visibility">visible</option>
+        <option name="charting.axisTitleY.visibility">visible</option>
+        <option name="charting.axisTitleY2.visibility">visible</option>
+        <option name="charting.axisX.abbreviation">none</option>
+        <option name="charting.axisX.scale">linear</option>
+        <option name="charting.axisY.abbreviation">none</option>
+        <option name="charting.axisY.scale">linear</option>
+        <option name="charting.axisY2.abbreviation">none</option>
+        <option name="charting.axisY2.enabled">0</option>
+        <option name="charting.axisY2.scale">inherit</option>
+        <option name="charting.chart">pie</option>
+        <option name="charting.chart.bubbleMaximumSize">50</option>
+        <option name="charting.chart.bubbleMinimumSize">10</option>
+        <option name="charting.chart.bubbleSizeBy">area</option>
+        <option name="charting.chart.nullValueMode">gaps</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+        <option name="charting.chart.stackMode">default</option>
+        <option name="charting.chart.style">shiny</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.layout.splitSeries">0</option>
+        <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
+        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+        <option name="charting.legend.mode">standard</option>
+        <option name="charting.legend.placement">right</option>
+        <option name="charting.lineWidth">2</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+      </chart>
+    </panel>
+    <panel depends="$has_results$">
+      <title>Email Alerts</title>
+      <chart>
+        <search>
+          <query>index=_internal source=*python* subject="Splunk Alert*" 
+| rex "Splunk\sAlert\:\s(?&lt;search&gt;[\s\w\d\-]*)\"\," 
+| stats count by search</query>
+          <earliest>$field1.earliest$</earliest>
+          <latest>$field1.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="charting.chart">pie</option>
+        <option name="charting.drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel depends="$has_results$">
+      <title>Alerts over Time</title>
+      <chart>
+        <search>
+          <query>index=_internal sourcetype="scheduler" result_count&gt;0 
+| search 
+    [| rest /servicesNS/-/-/saved/searches splunk_server=*-SH-*
+    | search actions!="" NOT actions IN (populate_lookup outputtelemetry lookup) (alert_condition!="" OR alert_threshold!="") 
+    | table title 
+    | rename title as savedsearch_name] 
+| timechart count by savedsearch_name useother=f</query>
+          <earliest>$field1.earliest$</earliest>
+          <latest>$field1.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
+        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
+        <option name="charting.axisTitleX.visibility">visible</option>
+        <option name="charting.axisTitleY.visibility">visible</option>
+        <option name="charting.axisTitleY2.visibility">visible</option>
+        <option name="charting.axisX.abbreviation">none</option>
+        <option name="charting.axisX.scale">linear</option>
+        <option name="charting.axisY.abbreviation">none</option>
+        <option name="charting.axisY.scale">linear</option>
+        <option name="charting.axisY2.abbreviation">none</option>
+        <option name="charting.axisY2.enabled">0</option>
+        <option name="charting.axisY2.scale">inherit</option>
+        <option name="charting.chart">column</option>
+        <option name="charting.chart.bubbleMaximumSize">50</option>
+        <option name="charting.chart.bubbleMinimumSize">10</option>
+        <option name="charting.chart.bubbleSizeBy">area</option>
+        <option name="charting.chart.nullValueMode">gaps</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+        <option name="charting.chart.stackMode">stacked</option>
+        <option name="charting.chart.style">shiny</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.layout.splitSeries">0</option>
+        <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
+        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+        <option name="charting.legend.mode">standard</option>
+        <option name="charting.legend.placement">right</option>
+        <option name="charting.lineWidth">2</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel depends="$has_results$">
+      <title>Alert Details</title>
+      <table>
+        <search>
+          <query>index=_internal sourcetype="scheduler" result_count&gt;0 
+| search alert_actions!=""
+    [| rest /servicesNS/-/-/saved/searches splunk_server=*-SH-* 
+    | search actions!="" NOT actions IN (populate_lookup outputtelemetry lookup) (alert_condition!="" OR alert_threshold!="") 
+    | table title 
+    | rename title as savedsearch_name] 
+| eval alert_type=if(match(alert_actions,"ataportal"),"ZTAP", if(match(alert_actions,"email"), "Email", "Unknown"))
+| stats count by savedsearch_name user alert_type
+| sort - count 
+| join 
+    [| rest /servicesNS/-/-/saved/searches splunk_server=*-SH-* 
+| search actions!="" NOT actions IN (populate_lookup outputtelemetry) (alert_condition!="" OR alert_threshold!="") 
+| table title cron_schedule   | rename title as savedsearch_name] | rename savedsearch_name as Alert, user as Owner, alert_type as "Alert Type", count as "Run Count", cron_schedule as "Run Schedule"</query>
+          <earliest>$field1.earliest$</earliest>
+          <latest>$field1.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="count">20</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="percentagesRow">false</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="rowNumbers">false</option>
+        <option name="totalsRow">false</option>
+        <option name="wrap">true</option>
+      </table>
+    </panel>
+  </row>
+</form>

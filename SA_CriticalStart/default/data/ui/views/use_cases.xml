@@ -1,0 +1,43 @@
+<dashboard theme="dark">
+  <label>Use Cases</label>
+  <search>
+    <query>| rest splunk_server=local /services/data/models | search title=use_cases </query>
+    <progress>
+      <condition match="'job.resultCount' == 0">
+        <set token="no_results">true</set>
+        <unset token="has_results"></unset>
+      </condition>
+      <condition>
+        <set token="has_results">true</set>
+        <unset token="no_results"></unset>
+      </condition>
+    </progress>
+  </search>
+  <row>
+    <panel depends="$no_results$">
+      <html>
+                <body>
+                    <h1/>
+                    <div class="setup-center">
+                        <p class="setup-text">Thank you for installing the Critical Start App for Splunk! There are a few things you need to do to get started:</p>
+                        <br/>
+                       <p class="setup-text">Installl the CS Use Case Add-on</p>
+                    </div>
+                </body>
+            </html>
+    </panel>
+  </row>
+  <row>
+    <panel depends="$has_results$">
+      <table>
+        <title>Use Cases</title>
+        <search>
+          <query>index=_internal | head 10</query>
+          <earliest>-15m</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="drilldown">none</option>
+      </table>
+    </panel>
+  </row>
+</dashboard>

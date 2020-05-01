@@ -1,0 +1,380 @@
+<form theme="dark">
+  <label>License Metrics</label>
+  <!-- Set metadata fields (host, index, sourcetyp, or source)
+  <search>  
+    <query>| makeresults | eval name="$dropToken_label$" | eval metrics_field= if(name="Index", "index", if(name="Host", "host", if (name="Source", "source", if (name="Sourcetype", "sourcetype","Unknown")))) | fields metrics_field</query>
+    <done>
+      <set token="tok_metrics_field">$result.metrics_field$</set>
+    </done>
+  </search>
+  -->
+  <search id="avg_base">
+    <query>| datamodel cs_license_metrics usage search | rename usage.b as b, usage.st as st, usage.idx as idx, usage.s as s, usage.h as h </query>
+    <earliest>-7d@d</earliest>
+    <latest>@d</latest>
+  </search>
+  <fieldset submitButton="false"></fieldset>
+  <row>
+    <panel>
+      <title>License Volume (GB)</title>
+      <single>
+        <search>
+          <query>| tstats summariesonly=true max(rollover.stacksz) as total from datamodel=cs_license_metrics.rollover where (earliest=-24h latest=now) 
+| eval license=round(total/1024/1024/1024) 
+| table license</query>
+          <earliest>-15m</earliest>
+          <latest>now</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="colorBy">value</option>
+        <option name="colorMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="numberPrecision">0</option>
+        <option name="rangeColors">["0x53a051","0x0877a6","0xf8be34","0xf1813f","0xdc4e41"]</option>
+        <option name="rangeValues">[0,30,70,100]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="showSparkline">1</option>
+        <option name="showTrendIndicator">1</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+        <option name="trendColorInterpretation">standard</option>
+        <option name="trendDisplayMode">absolute</option>
+        <option name="underLabel">License Volume GB</option>
+        <option name="unitPosition">after</option>
+        <option name="useColors">0</option>
+        <option name="useThousandSeparators">1</option>
+      </single>
+    </panel>
+    <panel>
+      <title>Today's License Usage (GB)</title>
+      <chart>
+        <search>
+          <query>| tstats sum(usage.b) as used from datamodel=cs_license_metrics.usage where ( earliest=@d latest=now) 
+| join 
+    [| tstats summariesonly=true max(rollover.stacksz) as total from datamodel=cs_license_metrics.rollover where (earliest=-24h latest=now)] 
+| eval usedGB=round(used/1024/1024/1024,3) 
+| eval license=round(total/1024/1024/1024,3) 
+| eval first=(license/4)*2 
+| eval second=(license/5)*4 
+| eval third=(license/10)*9 
+| eval fourth=license 
+| gauge usedGB first second third fourth</query>
+          <earliest>-15m</earliest>
+          <latest>now</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
+        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
+        <option name="charting.axisTitleX.visibility">visible</option>
+        <option name="charting.axisTitleY.visibility">visible</option>
+        <option name="charting.axisTitleY2.visibility">visible</option>
+        <option name="charting.axisX.abbreviation">none</option>
+        <option name="charting.axisX.scale">linear</option>
+        <option name="charting.axisY.abbreviation">none</option>
+        <option name="charting.axisY.scale">linear</option>
+        <option name="charting.axisY2.abbreviation">none</option>
+        <option name="charting.axisY2.enabled">0</option>
+        <option name="charting.axisY2.scale">inherit</option>
+        <option name="charting.chart">radialGauge</option>
+        <option name="charting.chart.bubbleMaximumSize">50</option>
+        <option name="charting.chart.bubbleMinimumSize">10</option>
+        <option name="charting.chart.bubbleSizeBy">area</option>
+        <option name="charting.chart.nullValueMode">gaps</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+        <option name="charting.chart.stackMode">default</option>
+        <option name="charting.chart.style">minimal</option>
+        <option name="charting.layout.splitSeries">0</option>
+        <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
+        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+        <option name="charting.legend.mode">standard</option>
+        <option name="charting.legend.placement">right</option>
+        <option name="charting.lineWidth">2</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Daily License Usage - Previous 30 Days</title>
+      <chart>
+        <search>
+          <query>| tstats summariesonly=true sum(rollover.b) as sumb from datamodel=cs_license_metrics.rollover by _time span=1d 
+| eval UsedGB=sumb/1024/1024/1024 
+| timechart span=1d eval(round(max(UsedGB),2)) as UsedGB
+| join 
+    [| tstats summariesonly=true sum(rollover.b) as b from datamodel=cs_license_metrics.rollover by _time span=1d 
+    | eval gb=b/1024/1024/1024 
+    | stats avg(gb) as AvgGB | eval AvgGB=round(AvgGB,2) ] 
+| join 
+    [| tstats summariesonly=true max(rollover.stacksz) as Limit from datamodel=cs_license_metrics.rollover where (earliest=-24h latest=now) 
+    | eval Limit=round(Limit/1024/1024/1024) ]</query>
+          <earliest>-30d@d</earliest>
+          <latest>@d</latest>
+        </search>
+        <option name="charting.chart">column</option>
+        <option name="charting.chart.overlayFields">AvgGB,Limit</option>
+        <option name="charting.drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="charting.seriesColors">[0x336699, 0x00CC00, 0xFF9900]</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Index Daily Avg GB (Last 7 days)</title>
+      <input type="dropdown" token="tok_avg_idx">
+        <label>Index</label>
+        <choice value="*">All Indexes</choice>
+        <default>*</default>
+        <fieldForLabel>idx</fieldForLabel>
+        <fieldForValue>idx</fieldForValue>
+        <search>
+          <query>| tstats summariesonly=true values(usage.idx) as idx from datamodel=cs_license_metrics.usage where (earliest=-7d latest=now) 
+| mvexpand idx</query>
+          <earliest>-60m@m</earliest>
+          <latest>now</latest>
+        </search>
+      </input>
+      <single>
+        <search>
+          <query>|tstats summariesonly=true sum(usage.b) as b from datamodel=cs_license_metrics.usage where usage.idx=$tok_avg_idx$ by _time span=1d
+| eval gb=b/1024/1024/1024 
+| stats avg(gb) as AvgTotalGB</query>
+          <earliest>-7d@d</earliest>
+          <latest>@d</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="rangeColors">["0x53a051","0x0877a6","0xf8be34","0xf1813f","0xdc4e41"]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="unit">GB</option>
+      </single>
+    </panel>
+    <panel>
+      <title>Sourcetype Daily Avg GB (Last 7 days)</title>
+      <input type="dropdown" token="tok_avg_st">
+        <label>Sourcetype</label>
+        <choice value="*">All Sourcetypes</choice>
+        <default>*</default>
+        <fieldForLabel>st</fieldForLabel>
+        <fieldForValue>st</fieldForValue>
+        <search>
+          <query>| tstats summariesonly=true values(usage.st) as st from datamodel=cs_license_metrics.usage where (earliest=-7d latest=now) 
+| mvexpand st</query>
+          <earliest>-60m@m</earliest>
+          <latest>now</latest>
+        </search>
+      </input>
+      <single>
+        <search>
+          <query>|tstats summariesonly=true sum(usage.b) as b from datamodel=cs_license_metrics.usage where usage.st=$tok_avg_st$ by _time span=1d
+| eval gb=b/1024/1024/1024 
+| stats avg(gb) as AvgTotalGB</query>
+          <earliest>-7d@d</earliest>
+          <latest>@d</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="rangeColors">["0x53a051","0x0877a6","0xf8be34","0xf1813f","0xdc4e41"]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="unit">GB</option>
+      </single>
+    </panel>
+    <panel>
+      <title>Host Daily Avg GB (Last 7 days)</title>
+      <input type="dropdown" token="tok_avg_h">
+        <label>Host</label>
+        <choice value="*">All Hosts</choice>
+        <default>*</default>
+        <fieldForLabel>h</fieldForLabel>
+        <fieldForValue>h</fieldForValue>
+        <search>
+          <query>| tstats summariesonly=true values(usage.h) as h from datamodel=cs_license_metrics.usage where (earliest=-7d latest=now) 
+| mvexpand h</query>
+          <earliest>-60m@m</earliest>
+          <latest>now</latest>
+        </search>
+      </input>
+      <single>
+        <search>
+          <query>|tstats summariesonly=true sum(usage.b) as b from datamodel=cs_license_metrics.usage where usage.h=$tok_avg_h$ by _time span=1d
+| eval gb=b/1024/1024/1024 
+| stats avg(gb) as AvgTotalGB</query>
+          <earliest>-7d@d</earliest>
+          <latest>@d</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="rangeColors">["0x53a051","0x0877a6","0xf8be34","0xf1813f","0xdc4e41"]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="unit">GB</option>
+      </single>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>License Usage by $dropToken_label$</title>
+      <input type="dropdown" token="tok_metrics" searchWhenChanged="true">
+        <label></label>
+        <choice value="usage.h">Host</choice>
+        <choice value="usage.idx">Index</choice>
+        <choice value="usage.s">Source</choice>
+        <choice value="usage.st">Sourcetype</choice>
+        <default>usage.h</default>
+        <change>
+          <set token="dropToken_label">$label$</set>
+        </change>
+        <initialValue>usage.h</initialValue>
+      </input>
+      <input type="time" token="field1" searchWhenChanged="true">
+        <label></label>
+        <default>
+          <earliest>-4h@m</earliest>
+          <latest>now</latest>
+        </default>
+      </input>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>License Distribution by $dropToken_label$</title>
+      <chart>
+        <search>
+          <query>| tstats summariesonly=true sum(usage.b) as UsedB from datamodel=cs_license_metrics.usage by $tok_metrics$ 
+| eval UsedGB=UsedB/1024/1024/1024 
+| eval UsedGB = round(UsedGB,2) 
+| fields $tok_metrics$ UsedGB</query>
+          <earliest>$field1.earliest$</earliest>
+          <latest>$field1.latest$</latest>
+        </search>
+        <option name="charting.chart">pie</option>
+        <option name="charting.drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </chart>
+    </panel>
+    <panel>
+      <title>License Usage Over Time by $dropToken_label$</title>
+      <chart>
+        <search>
+          <query>|tstats summariesonly=true sum(usage.b) as sumb from datamodel=cs_license_metrics.usage by _time $tok_metrics$
+| eval gb=sumb/1024/1024/1024 
+| timechart eval(round(sum(gb),2)) as UsedGB by $tok_metrics$</query>
+          <earliest>$field1.earliest$</earliest>
+          <latest>$field1.latest$</latest>
+        </search>
+        <option name="charting.chart">column</option>
+        <option name="charting.chart.stackMode">stacked</option>
+        <option name="charting.drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </chart>
+    </panel>
+    <panel>
+      <title>Top 10  $dropToken_label$</title>
+      <table>
+        <search>
+          <query>| tstats summariesonly=true sum(usage.b) as sumb from datamodel=cs_license_metrics.usage by $tok_metrics$
+| eval UsedGB=sumb/1024/1024/1024 
+| eval UsedGB = round(UsedGB,2) 
+| sort - UsedGB 
+| head 10 
+| fields $tok_metrics$ UsedGB 
+| rename usage.st as Sourcetype, usage.idx as Index, usage.h as Host, usage.s as Source</query>
+          <earliest>$field1.earliest$</earliest>
+          <latest>$field1.latest$</latest>
+        </search>
+        <option name="count">10</option>
+        <option name="drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </table>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Details by Host</title>
+      <input type="dropdown" token="tok_host_idx">
+        <label>Index</label>
+        <choice value="*">*</choice>
+        <default>*</default>
+        <fieldForLabel>idx</fieldForLabel>
+        <fieldForValue>idx</fieldForValue>
+        <search>
+          <query>| tstats summariesonly=true values(usage.idx) as idx from datamodel=cs_license_metrics.usage where (earliest=-7d latest=now) 
+| mvexpand idx</query>
+          <earliest>-15m</earliest>
+          <latest>now</latest>
+        </search>
+      </input>
+      <input type="dropdown" token="tok_host_st">
+        <label>Sourcetype</label>
+        <choice value="*">*</choice>
+        <default>*</default>
+        <fieldForLabel>st</fieldForLabel>
+        <fieldForValue>st</fieldForValue>
+        <search>
+          <query>| tstats summariesonly=true values(usage.st) as st from datamodel=cs_license_metrics.usage where (earliest=-7d latest=now) 
+| mvexpand st</query>
+          <earliest>-15m</earliest>
+          <latest>now</latest>
+        </search>
+      </input>
+      <input type="dropdown" token="field2">
+        <label>Host</label>
+        <choice value="*">*</choice>
+        <default>*</default>
+        <fieldForLabel>h</fieldForLabel>
+        <fieldForValue>h</fieldForValue>
+        <search>
+          <query>| tstats summariesonly=true values(usage.h) as h from datamodel=cs_license_metrics.usage where (earliest=-7d latest=now) 
+| mvexpand h</query>
+          <earliest>-15m</earliest>
+          <latest>now</latest>
+        </search>
+      </input>
+      <table>
+        <search>
+          <query>| tstats summariesonly=true sum(usage.b) as b, values(usage.st) as Sourcetype, values(usage.idx) as Index from datamodel=cs_license_metrics.usage where usage.st=$tok_host_st$ usage.idx=$tok_host_idx$ usage.h!=*internal by _time usage.h span=1h 
+| eval TotalGB=b/1024/1024/1024 | stats values(Index) as Index, values(Sourcetype) as Sourcetypes, avg(TotalGB) as AvgTotalGB by usage.h 
+| eval AvgGBPerHr=round(AvgTotalGB,2) 
+| fields - AvgTotalGB 
+| rename usage.h as Host 
+| sort - AvgGBPerHr</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="count">10</option>
+        <option name="drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </table>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>30 Day Log Volume by Sourcetype</title>
+      <table>
+        <search>
+          <query>| tstats summariesonly=true sum(usage.b) as sumb from datamodel=cs_license_metrics.usage by _time usage.st 
+| eval gb=sumb/1024/1024/1024 
+| timechart eval(round(sum(gb),2)) as UsedGB by usage.st limit=50 
+| addtotals 
+| join type=outer _time 
+    [| tstats summariesonly=true max(rollover.stacksz) as total from datamodel=cs_license_metrics.rollover by _time 
+    | eval Limit=round(total/1024/1024/1024,2) 
+    | fields Limit]</query>
+          <earliest>-30d@d</earliest>
+          <latest>@d</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="count">10</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="percentagesRow">false</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="rowNumbers">false</option>
+        <option name="totalsRow">false</option>
+        <option name="wrap">true</option>
+      </table>
+    </panel>
+  </row>
+</form>

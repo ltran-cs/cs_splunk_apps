@@ -1,0 +1,360 @@
+<form theme="dark">
+  <search>
+    <query>| rest /services/server/status/partitions-space 
+| dedup splunk_server
+| stats dc(splunk_server) as maxss 
+| eval midss =maxss/2 
+| eval minss = 0</query>
+    <progress>
+      <set token="tok_midss">$result.midss$</set>
+      <set token="tok_maxss">$result.maxss$</set>
+    </progress>
+  </search>
+  <label>System Metrics</label>
+  <fieldset submitButton="false">
+    <input type="dropdown" token="tok_threshold">
+      <label>Threshold</label>
+      <choice value="90">90%</choice>
+      <choice value="80">80%</choice>
+      <choice value="70">70%</choice>
+      <choice value="60">60%</choice>
+      <choice value="50">50%</choice>
+      <default>90</default>
+      <initialValue>90</initialValue>
+    </input>
+  </fieldset>
+  <row>
+    <panel>
+      <title>High Memory</title>
+      <viz type="horseshoe_meter_app.horseshoe_meter">
+        <search>
+          <query>| `set_fields`
+| eval percentage = round(mem_used/mem,3)*100 
+| eval severity_level = if(percentage &gt;= $tok_threshold$, 2, 0) 
+| table orig_splunk_server, percentage, severity_level
+| where severity_level=2
+| stats dc(orig_splunk_server)</query>
+          <earliest>-15m</earliest>
+          <latest>now</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="horseshoe_meter_app.horseshoe_meter.backgroundColor">#14141f</option>
+        <option name="horseshoe_meter_app.horseshoe_meter.caption">Host</option>
+        <option name="horseshoe_meter_app.horseshoe_meter.dialColor">#d0d5d9</option>
+        <option name="horseshoe_meter_app.horseshoe_meter.maxRangeColor">#b44441</option>
+        <option name="horseshoe_meter_app.horseshoe_meter.maxRangeThreshold">$tok_maxss$</option>
+        <option name="horseshoe_meter_app.horseshoe_meter.maxValue">$tok_maxss$</option>
+        <option name="horseshoe_meter_app.horseshoe_meter.midRangeColor">#fbcd2f</option>
+        <option name="horseshoe_meter_app.horseshoe_meter.midRangeThreshold">$tok_midss$</option>
+        <option name="horseshoe_meter_app.horseshoe_meter.minRangeColor">#3fc77a</option>
+        <option name="horseshoe_meter_app.horseshoe_meter.minValue">0</option>
+        <option name="horseshoe_meter_app.horseshoe_meter.thresholdStyle">realValue</option>
+        <option name="horseshoe_meter_app.horseshoe_meter.useRangemap">true</option>
+        <option name="horseshoe_meter_app.horseshoe_meter.valueColor">#555</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+      </viz>
+    </panel>
+    <panel>
+      <title>High CPU</title>
+      <viz type="horseshoe_meter_app.horseshoe_meter">
+        <search>
+          <query>| `set_fields`
+| eval cpu_usage = cpu_system_pct + cpu_user_pct 
+| table orig_splunk_server, cpu_usage 
+| eval severity_level = if(cpu_usage &gt;= $tok_threshold$, 2, 0) 
+| table orig_splunk_server, cpu_usage, severity_level
+| where severity_level=2
+| stats dc(orig_splunk_server)</query>
+          <earliest>-15m</earliest>
+          <latest>now</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="horseshoe_meter_app.horseshoe_meter.backgroundColor">#14141f</option>
+        <option name="horseshoe_meter_app.horseshoe_meter.caption">Host</option>
+        <option name="horseshoe_meter_app.horseshoe_meter.dialColor">#d0d5d9</option>
+        <option name="horseshoe_meter_app.horseshoe_meter.maxRangeColor">#b44441</option>
+        <option name="horseshoe_meter_app.horseshoe_meter.maxRangeThreshold">$tok_maxss$</option>
+        <option name="horseshoe_meter_app.horseshoe_meter.maxValue">$tok_maxss$</option>
+        <option name="horseshoe_meter_app.horseshoe_meter.midRangeColor">#fbcd2f</option>
+        <option name="horseshoe_meter_app.horseshoe_meter.midRangeThreshold">$tok_midss$</option>
+        <option name="horseshoe_meter_app.horseshoe_meter.minRangeColor">#3fc77a</option>
+        <option name="horseshoe_meter_app.horseshoe_meter.minValue">0</option>
+        <option name="horseshoe_meter_app.horseshoe_meter.thresholdStyle">realValue</option>
+        <option name="horseshoe_meter_app.horseshoe_meter.useRangemap">true</option>
+        <option name="horseshoe_meter_app.horseshoe_meter.valueColor">#555</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+      </viz>
+    </panel>
+    <panel>
+      <title>High Disk Usage</title>
+      <viz type="horseshoe_meter_app.horseshoe_meter">
+        <search>
+          <query>| `set_partition`
+| eval free = if(isnotnull(available), available, free) 
+| eval usage = capacity - free 
+| eval pct_usage = floor(usage / capacity * 100) 
+| stats first(pct_usage) as pct_usage by orig_splunk_server mount_point 
+| eval severity_level = if(pct_usage &gt;= $tok_threshold$, 2, 0) 
+| table orig_splunk_server, pct_usage, severity_level 
+| where severity_level=2 
+| stats dc(orig_splunk_server)</query>
+          <earliest>-15m</earliest>
+          <latest>now</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="horseshoe_meter_app.horseshoe_meter.backgroundColor">#14141f</option>
+        <option name="horseshoe_meter_app.horseshoe_meter.caption">Host</option>
+        <option name="horseshoe_meter_app.horseshoe_meter.dialColor">#d0d5d9</option>
+        <option name="horseshoe_meter_app.horseshoe_meter.maxRangeColor">#b44441</option>
+        <option name="horseshoe_meter_app.horseshoe_meter.maxRangeThreshold">$tok_maxss$</option>
+        <option name="horseshoe_meter_app.horseshoe_meter.maxValue">$tok_maxss$</option>
+        <option name="horseshoe_meter_app.horseshoe_meter.midRangeColor">#fbcd2f</option>
+        <option name="horseshoe_meter_app.horseshoe_meter.midRangeThreshold">$tok_midss$</option>
+        <option name="horseshoe_meter_app.horseshoe_meter.minRangeColor">#3fc77a</option>
+        <option name="horseshoe_meter_app.horseshoe_meter.minValue">0</option>
+        <option name="horseshoe_meter_app.horseshoe_meter.thresholdStyle">realValue</option>
+        <option name="horseshoe_meter_app.horseshoe_meter.useRangemap">true</option>
+        <option name="horseshoe_meter_app.horseshoe_meter.valueColor">#555</option>
+        <option name="refresh.display">progressbar</option>
+      </viz>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <table>
+        <search>
+          <query>| `set_fields`
+| eval percentage = round(mem_used/mem,3)*100 
+| eval severity_level = if(percentage &gt;= $tok_threshold$, 2, 0) | where severity_level=2 | table orig_splunk_server, percentage
+| rename orig_splunk_server AS Instance, percentage AS "Memory Usage (%)"  | appendpipe 
+    [ stats count 
+    | where count=0 
+    | eval Instance="No Results" 
+    | eval "Memory Usage (%)"="No Results" 
+    | table Instance "Memory Usage (%)"]</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="count">5</option>
+        <option name="drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </table>
+    </panel>
+    <panel>
+      <table>
+        <search>
+          <query>| `set_fields` 
+| eval cpu_usage = cpu_system_pct + cpu_user_pct 
+| table orig_splunk_server, cpu_usage 
+| eval severity_level = if(cpu_usage &gt;= $tok_threshold$, 2, 0) 
+| where severity_level=2 
+| table orig_splunk_server, cpu_usage 
+| rename orig_splunk_server AS Instance, cpu_usage AS "CPU Usage (%)" 
+| appendpipe 
+    [ stats count 
+    | where count=0 
+    | eval Instance="No Results" 
+    | eval "CPU Usage (%)"="No Results" 
+    | table Instance "CPU Usage (%)"]</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="count">5</option>
+        <option name="drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </table>
+    </panel>
+    <panel>
+      <table>
+        <search>
+          <query>| `set_partition`
+| eval free = if(isnotnull(available), available, free) 
+| eval usage = capacity - free 
+| eval pct_usage = round((usage / capacity * 100),2) 
+| stats first(pct_usage) as pct_usage by orig_splunk_server mount_point 
+| eval severity_level = if(pct_usage &gt;= $tok_threshold$, 2, 0)| where severity_level=2  
+| table orig_splunk_server, pct_usage | rename orig_splunk_server AS Instance, pct_usage AS "Disk Usage (%)" | appendpipe 
+    [ stats count 
+    | where count=0 
+    | eval Instance="No Results" 
+    | eval "Disk Usage (%)"="No Results" 
+    | table Instance "Disk Usage (%)"]</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="count">5</option>
+        <option name="drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </table>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Disk, CPU and Memory Stats by Instance</title>
+      <input type="dropdown" token="tok_instance">
+        <label>Instance</label>
+        <selectFirstChoice>true</selectFirstChoice>
+        <fieldForLabel>hostname</fieldForLabel>
+        <fieldForValue>hostname</fieldForValue>
+        <search>
+          <query>|inputlookup hosttype.csv | search hosttype=idx |table hostname</query>
+          <earliest>-15m</earliest>
+          <latest>now</latest>
+        </search>
+      </input>
+      <table>
+        <search>
+          <query>| `set_partition` 
+| eval free = if(isnotnull(available), available, free) 
+| eval usage = capacity - free 
+| eval pct_usage = floor(usage / capacity * 100) | eval usage=round(usage / 1024, 2) 
+| eval capacity=round(capacity / 1024, 2) 
+| stats list(mount_point) as mount_point list(capacity) as capacity list(usage) as usage list(pct_usage) as pct_usage by orig_splunk_server 
+| rename mount_point as "Mount Point", usage as "Disk Usage (GB)", capacity as "Disk Capacity (GB)", pct_usage as "Usage (%)", orig_splunk_server as Instance 
+| join 
+    [| `set_fields`
+| eventstats min(eval(if(isnull(normalized_load_avg_1min), "0", "1"))) as _load_avg_full_availability 
+| eval normalized_load_avg_1min = if(isnull(normalized_load_avg_1min), "N/A", normalized_load_avg_1min) 
+| eval core_info = if(isnull(cpu_count), "N/A", cpu_count)." / ".if(isnull(virtual_cpu_count), "N/A", virtual_cpu_count) 
+| eval cpu_usage = cpu_system_pct + cpu_user_pct 
+| eval mem_used_pct = round(mem_used / mem * 100 , 2) 
+| eval mem_usedGB = round(mem_used/1024, 0) 
+| eval memGB = round(mem/1024, 0) 
+| table orig_splunk_server, normalized_load_avg_1min, cpu_usage, mem, mem_used, mem_used_pct
+| sort orig_splunk_server
+| rename orig_splunk_server AS Instance, normalized_load_avg_1min AS "Load Average", cpu_usage AS "CPU Usage (%)", mem AS "Memory Capacity (MB)", mem_used AS "Memory Usage (MB)", mem_used_pct AS "Memory Usage (%)"] | search Instance=$tok_instance$
+| table Instance, "Mount Point", "Disk Usage (GB)", "Disk Capacity (GB)", "Usage (%)",  "Load Average", "CPU Usage (%)", "Memory Capacity (MB)", "Memory Usage (MB)", "Memory Usage (%)"</query>
+          <earliest>-15m</earliest>
+          <latest>now</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="count">20</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="percentagesRow">false</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="rowNumbers">false</option>
+        <option name="totalsRow">false</option>
+        <option name="wrap">true</option>
+        <format type="number" field="Physical Memory Usage (%)"></format>
+      </table>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Queue Fill Ratio ( % ) - Last 24hrs</title>
+      <input type="dropdown" token="tok_type">
+        <label>Host Type</label>
+        <choice value="hf">Heavy Forwarder</choice>
+        <choice value="idx">Indexer</choice>
+        <default>hf</default>
+        <search>
+          <query/>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+      </input>
+      <input type="dropdown" token="tok_host_queue">
+        <label></label>
+        <fieldForLabel>hostname</fieldForLabel>
+        <fieldForValue>hostname</fieldForValue>
+        <search>
+          <query>|inputlookup hosttype.csv | search hosttype=$tok_type$ | sort hostname</query>
+          <earliest>-15m</earliest>
+          <latest>now</latest>
+        </search>
+        <selectFirstChoice>true</selectFirstChoice>
+      </input>
+      <input type="dropdown" token="tok_agg">
+        <label>Aggregation</label>
+        <choice value="avg">Average</choice>
+        <choice value="median">Median</choice>
+        <choice value="min">Minimum</choice>
+        <choice value="max">Maximum</choice>
+        <choice value="perc90">90th Percentile</choice>
+        <default>avg</default>
+      </input>
+      <chart>
+        <search>
+          <query>index=_internal host=$tok_host_queue$ source=*metrics.log sourcetype=splunkd group=queue (name=parsingqueue OR name=aggqueue OR name=typingqueue OR name=indexqueue) | eval name=case(name=="aggqueue","2 - Aggregation Queue",name=="indexqueue","4 - Indexing Queue",name=="parsingqueue","1 - Parsing Queue",name=="typingqueue","3 - Typing Queue")
+| eval ingest_pipe = if(isnotnull(ingest_pipe), ingest_pipe, "none")
+| search ingest_pipe=*
+| eval max=if(isnotnull(max_size_kb),max_size_kb,max_size)
+| eval curr=if(isnotnull(current_size_kb),current_size_kb,current_size)
+| eval fill_perc=round((curr/max)*100,2)
+| timechart bins=999 $tok_agg$(fill_perc) by name useother=false limit=15</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
+        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
+        <option name="charting.axisTitleX.visibility">visible</option>
+        <option name="charting.axisTitleY.visibility">collapsed</option>
+        <option name="charting.axisTitleY2.visibility">visible</option>
+        <option name="charting.axisX.abbreviation">none</option>
+        <option name="charting.axisX.scale">linear</option>
+        <option name="charting.axisY.abbreviation">none</option>
+        <option name="charting.axisY.scale">linear</option>
+        <option name="charting.axisY2.abbreviation">none</option>
+        <option name="charting.axisY2.enabled">0</option>
+        <option name="charting.axisY2.scale">inherit</option>
+        <option name="charting.chart">area</option>
+        <option name="charting.chart.bubbleMaximumSize">50</option>
+        <option name="charting.chart.bubbleMinimumSize">10</option>
+        <option name="charting.chart.bubbleSizeBy">area</option>
+        <option name="charting.chart.nullValueMode">gaps</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+        <option name="charting.chart.stackMode">default</option>
+        <option name="charting.chart.style">shiny</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.layout.splitSeries">1</option>
+        <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
+        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+        <option name="charting.legend.mode">standard</option>
+        <option name="charting.legend.placement">right</option>
+        <option name="charting.lineWidth">2</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Fowarder Metrics</title>
+      <input type="dropdown" token="tok_fwd_type">
+        <label>Forwarder Type</label>
+        <choice value="hf">Heavy</choice>
+        <choice value="uf">Universal</choice>
+        <default>hf</default>
+        <initialValue>hf</initialValue>
+      </input>
+      <table>
+        <search>
+          <query>| tstats latest(tcpin.hostname) as hostname, latest(tcpin.sourcePort) as sourcePort ,latest(tcpin.destPort) as destPort,latest(tcpin.fwdType) as fwdType,latest(tcpin.sourceIp) as sourceIp,latest(tcpin.version) as version , latest(tcpin.os) as os, latest(tcpin.arch) as arch, latest(tcpin.tcp_KBps) as tcp_KBps, latest(tcpin.tcp_eps) as tcp_eps, latest(tcpin.guid) as guid from datamodel=cs_system_metrics.tcpin by host | eval source_uri = hostname.":".sourcePort | search [|inputlookup hosttype.csv | search hosttype=$tok_fwd_type$ | table hostname]
+| eval dest_uri = host.":".destPort
+| eval connection = source_uri."-&gt;".dest_uri
+| stats values(fwdType) as fwdType, values(sourceIp) as sourceIp, last(version) as version,  values(os) as os, values(arch) as arch, dc(dest_uri) as dest_count, dc(connection) as connection_count, avg(tcp_KBps) as avg_tcp_kbps, avg(tcp_eps) as avg_tcp_eps by hostname, guid
+| eval avg_tcp_kbps = round(avg_tcp_kbps, 2)
+| eval avg_tcp_eps = round(avg_tcp_eps, 2)
+| eval fwdType = case(fwdType == "full", "Heavy Forwarder", fwdType == "uf", "Universal Forwarder", fwdType == "lwf", "Light Forwarder", 1==1, fwdType)
+| rename hostname as Instance, fwdType as "Forwarder Type", sourceIp as IP, version as "Splunk Version", os as OS, arch as Architecture, guid as GUID, dest_count as "Receiver Count", connection_count as "Connection Count", avg_tcp_kbps as "Average KB/s", avg_tcp_eps as "Average Events/s"</query>
+          <earliest>-4h@m</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="count">10</option>
+        <option name="drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </table>
+    </panel>
+  </row>
+</form>
