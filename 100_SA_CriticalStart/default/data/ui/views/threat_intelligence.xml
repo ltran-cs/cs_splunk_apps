@@ -21,7 +21,9 @@
                     <div class="setup-center">
                         <p class="setup-text">Thank you for installing the Critical Start App for Splunk! There are a few things you need to do to get started:</p>
                         <br/>
-                       <p class="setup-text">Installl the CS Threat Intelligence Add-on</p>
+			<ul>
+                        <li>Installl the CS Threat Intelligence Add-on</li>
+                      </ul>
                     </div>
                 </body>
             </html>

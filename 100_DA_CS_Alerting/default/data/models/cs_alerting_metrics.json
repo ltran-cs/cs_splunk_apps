@@ -1,226 +1,70 @@
 {
-    "modelName": "cs_system_metrics",
-    "displayName": "CS System Metrics",
+    "modelName": "cs_alerting_metrics",
+    "displayName": "CS Alerting Metrics",
     "description": "",
     "objectSummary": {
-        "Event-Based": 2,
+        "Event-Based": 3,
         "Transaction-Based": 0,
         "Search-Based": 0
     },
     "objects": [
         {
-            "objectName": "system",
-            "displayName": "system",
+            "objectName": "scheduler",
+            "displayName": "scheduler",
             "parentName": "BaseEvent",
             "comment": "",
             "fields": [
                 {
-                    "fieldName": "aggQueue",
-                    "owner": "system",
+                    "fieldName": "result_count",
+                    "owner": "scheduler",
                     "type": "number",
                     "fieldSearch": "",
                     "required": false,
                     "multivalue": false,
                     "hidden": false,
                     "editable": true,
-                    "displayName": "aggQueue",
+                    "displayName": "result_count",
                     "comment": ""
                 },
                 {
-                    "fieldName": "available",
-                    "owner": "system",
-                    "type": "number",
-                    "fieldSearch": "",
-                    "required": false,
-                    "multivalue": false,
-                    "hidden": false,
-                    "editable": true,
-                    "displayName": "available",
-                    "comment": ""
-                },
-                {
-                    "fieldName": "average_KBps",
-                    "owner": "system",
-                    "type": "number",
-                    "fieldSearch": "",
-                    "required": false,
-                    "multivalue": false,
-                    "hidden": false,
-                    "editable": true,
-                    "displayName": "average_KBps",
-                    "comment": ""
-                },
-                {
-                    "fieldName": "capacity",
-                    "owner": "system",
-                    "type": "number",
-                    "fieldSearch": "",
-                    "required": false,
-                    "multivalue": false,
-                    "hidden": false,
-                    "editable": true,
-                    "displayName": "capacity",
-                    "comment": ""
-                },
-                {
-                    "fieldName": "cpu_count",
-                    "owner": "system",
-                    "type": "number",
-                    "fieldSearch": "",
-                    "required": false,
-                    "multivalue": false,
-                    "hidden": false,
-                    "editable": true,
-                    "displayName": "cpu_count",
-                    "comment": ""
-                },
-                {
-                    "fieldName": "cpu_system_pct",
-                    "owner": "system",
-                    "type": "number",
-                    "fieldSearch": "",
-                    "required": false,
-                    "multivalue": false,
-                    "hidden": false,
-                    "editable": true,
-                    "displayName": "cpu_system_pct",
-                    "comment": ""
-                },
-                {
-                    "fieldName": "cpu_user_pct",
-                    "owner": "system",
-                    "type": "number",
-                    "fieldSearch": "",
-                    "required": false,
-                    "multivalue": false,
-                    "hidden": false,
-                    "editable": true,
-                    "displayName": "cpu_user_pct",
-                    "comment": ""
-                },
-                {
-                    "fieldName": "free",
-                    "owner": "system",
-                    "type": "number",
-                    "fieldSearch": "",
-                    "required": false,
-                    "multivalue": false,
-                    "hidden": false,
-                    "editable": true,
-                    "displayName": "free",
-                    "comment": ""
-                },
-                {
-                    "fieldName": "fs_type",
-                    "owner": "system",
+                    "fieldName": "app",
+                    "owner": "scheduler",
                     "type": "string",
                     "fieldSearch": "",
                     "required": false,
                     "multivalue": false,
                     "hidden": false,
                     "editable": true,
-                    "displayName": "fs_type",
+                    "displayName": "app",
                     "comment": ""
                 },
                 {
-                    "fieldName": "indexQueue",
-                    "owner": "system",
+                    "fieldName": "run_time",
+                    "owner": "scheduler",
                     "type": "number",
                     "fieldSearch": "",
                     "required": false,
                     "multivalue": false,
                     "hidden": false,
                     "editable": true,
-                    "displayName": "indexQueue",
+                    "displayName": "run_time",
                     "comment": ""
                 },
                 {
-                    "fieldName": "mem",
-                    "owner": "system",
-                    "type": "number",
-                    "fieldSearch": "",
-                    "required": false,
-                    "multivalue": false,
-                    "hidden": false,
-                    "editable": true,
-                    "displayName": "mem",
-                    "comment": ""
-                },
-                {
-                    "fieldName": "mem_used",
-                    "owner": "system",
-                    "type": "number",
-                    "fieldSearch": "",
-                    "required": false,
-                    "multivalue": false,
-                    "hidden": false,
-                    "editable": true,
-                    "displayName": "mem_used",
-                    "comment": ""
-                },
-                {
-                    "fieldName": "mount_point",
-                    "owner": "system",
+                    "fieldName": "savedsearch_name",
+                    "owner": "scheduler",
                     "type": "string",
                     "fieldSearch": "",
                     "required": false,
                     "multivalue": false,
                     "hidden": false,
                     "editable": true,
-                    "displayName": "mount_point",
-                    "comment": ""
-                },
-                {
-                    "fieldName": "normalized_load_avg_1min",
-                    "owner": "system",
-                    "type": "number",
-                    "fieldSearch": "",
-                    "required": false,
-                    "multivalue": false,
-                    "hidden": false,
-                    "editable": true,
-                    "displayName": "normalized_load_avg_1min",
-                    "comment": ""
-                },
-                {
-                    "fieldName": "orig_splunk_server",
-                    "owner": "system",
-                    "type": "string",
-                    "fieldSearch": "",
-                    "required": false,
-                    "multivalue": false,
-                    "hidden": false,
-                    "editable": true,
-                    "displayName": "orig_splunk_server",
-                    "comment": ""
-                },
-                {
-                    "fieldName": "parsingQueue",
-                    "owner": "system",
-                    "type": "number",
-                    "fieldSearch": "",
-                    "required": false,
-                    "multivalue": false,
-                    "hidden": false,
-                    "editable": true,
-                    "displayName": "parsingQueue",
-                    "comment": ""
-                },
-                {
-                    "fieldName": "pset_count",
-                    "owner": "system",
-                    "type": "number",
-                    "fieldSearch": "",
-                    "required": false,
-                    "multivalue": false,
-                    "hidden": false,
-                    "editable": true,
-                    "displayName": "pset_count",
+                    "displayName": "savedsearch_name",
                     "comment": ""
                 },
                 {
                     "fieldName": "status",
-                    "owner": "system",
+                    "owner": "scheduler",
                     "type": "string",
                     "fieldSearch": "",
                     "required": false,
@@ -231,27 +75,27 @@
                     "comment": ""
                 },
                 {
-                    "fieldName": "typingQueue",
-                    "owner": "system",
+                    "fieldName": "user",
+                    "owner": "scheduler",
                     "type": "string",
                     "fieldSearch": "",
                     "required": false,
                     "multivalue": false,
                     "hidden": false,
                     "editable": true,
-                    "displayName": "typingQueue",
+                    "displayName": "user",
                     "comment": ""
                 },
                 {
-                    "fieldName": "virtual_cpu_count",
-                    "owner": "system",
+                    "fieldName": "alert_actions",
+                    "owner": "scheduler",
                     "type": "string",
                     "fieldSearch": "",
                     "required": false,
                     "multivalue": false,
                     "hidden": false,
                     "editable": true,
-                    "displayName": "virtual_cpu_count",
+                    "displayName": "alert_actions",
                     "comment": ""
                 },
                 {
@@ -306,100 +150,64 @@
             "calculations": [],
             "constraints": [
                 {
-                    "search": "index=_internal type=cs_system_metrics",
-                    "owner": "system"
+                    "search": "index=_internal sourcetype=\"scheduler\"",
+                    "owner": "scheduler"
                 }
             ],
-            "lineage": "system"
+            "lineage": "scheduler"
         },
         {
-            "objectName": "partition",
-            "displayName": "partition",
+            "objectName": "sendmodalert",
+            "displayName": "sendmodalert",
             "parentName": "BaseEvent",
             "comment": "",
             "fields": [
                 {
-                    "fieldName": "available",
-                    "owner": "partition",
-                    "type": "number",
-                    "fieldSearch": "",
-                    "required": false,
-                    "multivalue": false,
-                    "hidden": false,
-                    "editable": true,
-                    "displayName": "available",
-                    "comment": ""
-                },
-                {
-                    "fieldName": "capacity",
-                    "owner": "partition",
-                    "type": "number",
-                    "fieldSearch": "",
-                    "required": false,
-                    "multivalue": false,
-                    "hidden": false,
-                    "editable": true,
-                    "displayName": "capacity",
-                    "comment": ""
-                },
-                {
-                    "fieldName": "free",
-                    "owner": "partition",
-                    "type": "number",
-                    "fieldSearch": "",
-                    "required": false,
-                    "multivalue": false,
-                    "hidden": false,
-                    "editable": true,
-                    "displayName": "free",
-                    "comment": ""
-                },
-                {
-                    "fieldName": "fs_type",
-                    "owner": "partition",
+                    "fieldName": "action",
+                    "owner": "sendmodalert",
                     "type": "string",
                     "fieldSearch": "",
                     "required": false,
                     "multivalue": false,
                     "hidden": false,
                     "editable": true,
-                    "displayName": "fs_type",
+                    "displayName": "action",
                     "comment": ""
                 },
                 {
-                    "fieldName": "mount_point",
-                    "owner": "partition",
+                    "fieldName": "app",
+                    "owner": "sendmodalert",
                     "type": "string",
                     "fieldSearch": "",
                     "required": false,
                     "multivalue": false,
                     "hidden": false,
                     "editable": true,
-                    "displayName": "mount_point",
+                    "displayName": "app",
                     "comment": ""
                 },
                 {
-                    "fieldName": "orig_splunk_server",
-                    "owner": "partition",
+                    "fieldName": "owner",
+                    "owner": "sendmodalert",
                     "type": "string",
                     "fieldSearch": "",
                     "required": false,
                     "multivalue": false,
                     "hidden": false,
                     "editable": true,
-                    "displayName": "orig_splunk_server",
+                    "displayName": "owner",
                     "comment": ""
                 },
                 {
-                    "fieldName": "type",
-                    "owner": "partition",
+                    "fieldName": "search",
+                    "owner": "sendmodalert",
                     "type": "string",
                     "fieldSearch": "",
                     "required": false,
                     "multivalue": false,
                     "hidden": false,
                     "editable": true,
-                    "displayName": "type",
+                    "displayName": "search",
                     "comment": ""
                 },
                 {
@@ -454,15 +262,140 @@
             "calculations": [],
             "constraints": [
                 {
-                    "search": "index=_internal type=cs_partition",
-                    "owner": "partition"
+                    "search": "index=\"_internal\" sourcetype=splunkd component=sendmodalert type=saved",
+                    "owner": "sendmodalert"
                 }
             ],
-            "lineage": "partition"
+            "lineage": "sendmodalert"
+        },
+        {
+            "objectName": "sendalert",
+            "displayName": "sendalert",
+            "parentName": "BaseEvent",
+            "comment": "",
+            "fields": [
+                {
+                    "fieldName": "action",
+                    "owner": "sendalert",
+                    "type": "string",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false,
+                    "editable": true,
+                    "displayName": "action",
+                    "comment": ""
+                },
+                {
+                    "fieldName": "app",
+                    "owner": "sendalert",
+                    "type": "string",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false,
+                    "editable": true,
+                    "displayName": "app",
+                    "comment": ""
+                },
+                {
+                    "fieldName": "owner",
+                    "owner": "sendalert",
+                    "type": "string",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false,
+                    "editable": true,
+                    "displayName": "owner",
+                    "comment": ""
+                },
+                {
+                    "fieldName": "search",
+                    "owner": "sendalert",
+                    "type": "string",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false,
+                    "editable": true,
+                    "displayName": "search",
+                    "comment": ""
+                },
+                {
+                    "fieldName": "subject",
+                    "owner": "sendalert",
+                    "type": "string",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false,
+                    "editable": true,
+                    "displayName": "subject",
+                    "comment": ""
+                },
+                {
+                    "fieldName": "_time",
+                    "owner": "BaseEvent",
+                    "type": "timestamp",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false,
+                    "editable": true,
+                    "displayName": "_time",
+                    "comment": ""
+                },
+                {
+                    "fieldName": "host",
+                    "owner": "BaseEvent",
+                    "type": "string",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false,
+                    "editable": true,
+                    "displayName": "host",
+                    "comment": ""
+                },
+                {
+                    "fieldName": "source",
+                    "owner": "BaseEvent",
+                    "type": "string",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false,
+                    "editable": true,
+                    "displayName": "source",
+                    "comment": ""
+                },
+                {
+                    "fieldName": "sourcetype",
+                    "owner": "BaseEvent",
+                    "type": "string",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false,
+                    "editable": true,
+                    "displayName": "sourcetype",
+                    "comment": ""
+                }
+            ],
+            "calculations": [],
+            "constraints": [
+                {
+                    "search": "index=_internal (sourcetype=splunkd component=sendmodalert type=saved) OR sourcetype=splunk_python",
+                    "owner": "sendalert"
+                }
+            ],
+            "lineage": "sendalert"
         }
     ],
     "objectNameList": [
-        "system",
-        "partition"
+        "scheduler",
+        "sendmodalert",
+        "sendalert"
     ]
 }

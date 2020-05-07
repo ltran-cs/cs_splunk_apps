@@ -41,18 +41,14 @@
       <title>Top 10 Alerts</title>
       <table>
         <search>
-          <query>index=_internal sourcetype="scheduler" result_count&gt;0 
-| search 
-    [| rest /servicesNS/-/-/saved/searches splunk_server=*-SH-*
-    | search actions!="" NOT actions IN (populate_lookup outputtelemetry lookup) (alert_condition!="" OR alert_threshold!="") 
+          <query>| tstats summariesonly=true count as tcount from datamodel=cs_alerting_metrics.scheduler where scheduler.result_count&gt;0 
+    [| inputlookup alert_details.csv 
     | table title 
-    | rename title as savedsearch_name] 
-| chart sparkline count by savedsearch_name 
-|  rename savedsearch_name as Alerts
-|  sort - count
-|  head 10 
-| fields Alerts, sparkline 
-| rename Alerts as " ", sparkline as "  "</query>
+    | rename title as scheduler.savedsearch_name ] by _time scheduler.savedsearch_name 
+| chart sparkline(sum(tcount)) as sparkline sum(tcount) as tcount by scheduler.savedsearch_name 
+| sort - tcount 
+| head 10  | fields scheduler.savedsearch_name  sparkline
+| rename scheduler.savedsearch_name  as " ", sparkline as "  "</query>
           <earliest>$field1.earliest$</earliest>
           <latest>$field1.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -71,8 +67,7 @@
       <title>ZTAP Alerts</title>
       <chart>
         <search>
-          <query>index="_internal" sourcetype=splunkd invoking 
-| stats count by search</query>
+          <query>| tstats summariesonly=true count from datamodel=cs_alerting_metrics.sendalert where sendalert.action=ataportal by sendalert.search</query>
           <earliest>$field1.earliest$</earliest>
           <latest>$field1.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -115,9 +110,9 @@
       <title>Email Alerts</title>
       <chart>
         <search>
-          <query>index=_internal source=*python* subject="Splunk Alert*" 
-| rex "Splunk\sAlert\:\s(?&lt;search&gt;[\s\w\d\-]*)\"\," 
-| stats count by search</query>
+          <query>| tstats summariesonly=true count from datamodel=cs_alerting_metrics.sendalert by sendalert.subject 
+| rename sendalert.subject as subject 
+| eval subject = replace (subject, "Splunk Alert:\s", "")</query>
           <earliest>$field1.earliest$</earliest>
           <latest>$field1.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -133,13 +128,11 @@
       <title>Alerts over Time</title>
       <chart>
         <search>
-          <query>index=_internal sourcetype="scheduler" result_count&gt;0 
-| search 
-    [| rest /servicesNS/-/-/saved/searches splunk_server=*-SH-*
-    | search actions!="" NOT actions IN (populate_lookup outputtelemetry lookup) (alert_condition!="" OR alert_threshold!="") 
+          <query>| tstats summariesonly=true count as tcount from datamodel=cs_alerting_metrics.scheduler where scheduler.result_count&gt;0 
+    [| inputlookup alert_details.csv 
     | table title 
-    | rename title as savedsearch_name] 
-| timechart count by savedsearch_name useother=f</query>
+    | rename title as scheduler.savedsearch_name ] by _time scheduler.savedsearch_name 
+| timechart max(tcount) by scheduler.savedsearch_name useother=f</query>
           <earliest>$field1.earliest$</earliest>
           <latest>$field1.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -184,19 +177,18 @@
       <title>Alert Details</title>
       <table>
         <search>
-          <query>index=_internal sourcetype="scheduler" result_count&gt;0 
-| search alert_actions!=""
-    [| rest /servicesNS/-/-/saved/searches splunk_server=*-SH-* 
-    | search actions!="" NOT actions IN (populate_lookup outputtelemetry lookup) (alert_condition!="" OR alert_threshold!="") 
+          <query>| tstats summariesonly=true count from datamodel=cs_alerting_metrics.scheduler where scheduler.result_count&gt;0 
+    [| inputlookup alert_details.csv 
     | table title 
-    | rename title as savedsearch_name] 
-| eval alert_type=if(match(alert_actions,"ataportal"),"ZTAP", if(match(alert_actions,"email"), "Email", "Unknown"))
-| stats count by savedsearch_name user alert_type
-| sort - count 
+    | rename title as scheduler.savedsearch_name ] by scheduler.savedsearch_name 
 | join 
-    [| rest /servicesNS/-/-/saved/searches splunk_server=*-SH-* 
-| search actions!="" NOT actions IN (populate_lookup outputtelemetry) (alert_condition!="" OR alert_threshold!="") 
-| table title cron_schedule   | rename title as savedsearch_name] | rename savedsearch_name as Alert, user as Owner, alert_type as "Alert Type", count as "Run Count", cron_schedule as "Run Schedule"</query>
+    [| inputlookup alert_details.csv 
+    | table title owner actions cron_schedule 
+    | rename title as scheduler.savedsearch_name] 
+| sort - count 
+| eval alert_type=if(match(actions,"ataportal"),"ZTAP", if(match(actions,"email"), "Email", "Unknown")) 
+| rename scheduler.savedsearch_name as Alert, owner as Owner, alert_type as "Alert Type", count as "Run Count", cron_schedule as "Cron Schedule" 
+| table Alert Owner "Alert Type" "Run Count" "Cron Schedule"</query>
           <earliest>$field1.earliest$</earliest>
           <latest>$field1.latest$</latest>
           <sampleRatio>1</sampleRatio>

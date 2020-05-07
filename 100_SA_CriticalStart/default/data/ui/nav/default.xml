@@ -1,9 +1,9 @@
 <nav search_view="search">
- <view name="threat_intelligence" default='true' />
+ <view name="threat_intelligence" />
   <view name="use_cases" />
   <collection label="Metrics">
   <view name="alerting_metrics" />
-  <view name="license_metrics" />
+  <view name="license_metrics" default='true' />
       <view name="system_metrics" />
   </collection>
     <view name="search" />

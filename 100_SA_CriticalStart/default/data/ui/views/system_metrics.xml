@@ -259,6 +259,7 @@
           <earliest>-24h@h</earliest>
           <latest>now</latest>
         </search>
+        <initialValue>hf</initialValue>
       </input>
       <input type="dropdown" token="tok_host_queue">
         <label></label>

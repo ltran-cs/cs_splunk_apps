@@ -1,0 +1,34 @@
+[views/license_metrics]
+version = 7.3.0
+modtime = 1588188780.667986000
+
+[views/system_metrics]
+version = 7.3.0
+modtime = 1588609917.236051000
+
+[app/ui]
+version = 7.3.0
+modtime = 1588365252.393593000
+
+[app/launcher]
+version = 7.3.0
+modtime = 1588365252.395089000
+
+[app/package/check_for_updates]
+version = 7.3.0
+modtime = 1588365252.395551000
+
+[views/alerting_metrics]
+version = 7.3.0
+modtime = 1588861125.821830000
+
+[views/use_cases]
+version = 7.3.0
+modtime = 1588608615.905420000
+
+[savedsearches/CS%20Alert%20Details%20Lookup%20Output]
+access = read : [ * ], write : [ admin ]
+export = system
+owner = long.tran@criticalstart.com
+version = 7.3.0
+modtime = 1588799586.498254000
