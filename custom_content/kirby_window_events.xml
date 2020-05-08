@@ -1,0 +1,282 @@
+<dashboard>
+  <label>Windows Events Reports</label>
+ <row>
+    <panel>
+      <title>Top 25 Accounts Lockout (EventCode=4740)  - Last 24hrs</title>
+      <table>
+        <search>
+          <query>index=kirby-windows-logs EventCode=4740 | top limit=25 user</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="count">10</option>
+        <option name="drilldown">cell</option>
+        <option name="refresh.display">progressbar</option>
+        <drilldown>
+          <set token="tokuser">$click.value$</set>
+        </drilldown>
+      </table>
+    </panel>
+    <panel>
+      <title>Event Details</title>
+      <table>
+        <search>
+          <query>index=*windows* EventCode=4740 user="$tokuser$" | dedup dvc | rename user as User, dvc as DC, src_nt_host as "Src Machine", name as Message | table User DC "Src Machine" Message</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="count">10</option>
+        <option name="drilldown">cell</option>
+        <option name="refresh.display">progressbar</option>
+        <drilldown>
+          <link target="_blank">search?q=index=*windows*%20EventCode=4740%20user=%22$tokuser$%22&amp;earliest=-24h@h&amp;latest=now</link>
+        </drilldown>
+      </table>
+    </panel>
+    <panel>
+      <title>Input username and enter to search</title>
+      <input type="text" token="tokuser" searchWhenChanged="true">
+        <label></label>
+      </input>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Windows Account Lockout (EventCode=4740)  Summary</title>
+      <table>
+        <search>
+          <query>index=kirby-windows-logs EventCode=4740 
+| dedup Caller_Computer_Name 
+| eval Time=strftime(_time,"%x %r") 
+| rename user as User, dest_nt_domain as Domain, Caller_Computer_Name as "Caller Computer Name"
+| table Time, User Domain "Caller Computer Name" 
+| sort - Time</query>
+          <earliest>1558011600.000</earliest>
+          <latest>1558100504.000</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="count">100</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="percentagesRow">false</option>
+        <option name="rowNumbers">false</option>
+        <option name="totalsRow">false</option>
+        <option name="wrap">true</option>
+      </table>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Created User Accounts- Last 24hrs</title>
+      <table>
+        <search>
+          <query>index=*windows* EventCode=4720  user!=*$ | eval Time=strftime(_time,"%x %r") | rename src_nt_domain as Domain, user as "Target Name", dvc_nt_host as "Target Host", src_user as "Subject Name" | table Time Domain "Target Name" "Target Host" "Subject Name" | sort - Time</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="count">100</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="percentagesRow">false</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="rowNumbers">false</option>
+        <option name="totalsRow">false</option>
+        <option name="wrap">true</option>
+      </table>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Deleted User Accounts - Last 24hrs</title>
+      <table>
+        <search>
+          <query>index=kirby-windows-logs EventCode=4726 user!=*$ 
+| eval Time=strftime(_time,"%x %r") 
+| rename src_nt_domain as Domain, user as "Target Name", dvc_nt_host as "Target Host", src_user as "Subject Name" 
+| table Time Domain "Target Name" "Target Host" "Subject Name" | sort - Time</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="count">100</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="percentagesRow">false</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="rowNumbers">false</option>
+        <option name="totalsRow">false</option>
+        <option name="wrap">true</option>
+      </table>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Disabled User Accounts - Last 24hrs</title>
+      <table>
+        <search>
+          <query>index=*windows* EventCode=4725 user!=*$ | eval Time=strftime(_time,"%x %r") | rename src_nt_domain as Domain, user as "Target Name", dvc_nt_host as "Target Host", src_user as "Subject Name" | table Time Domain "Target Name" "Target Host" "Subject Name" | sort - Time</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="count">100</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="percentagesRow">false</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="rowNumbers">false</option>
+        <option name="totalsRow">false</option>
+        <option name="wrap">true</option>
+      </table>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Enabled User Accounts - Last 24hrs</title>
+      <table>
+        <search>
+          <query>index=*windows* EventCode=4722 user!=*$$ | eval Time=strftime(_time,"%x %r") | rename src_nt_domain as Domain, user as "Target Name", dvc_nt_host as "Target Host", src_user as "Subject Name" | table Time Domain "Target Name" "Target Host" "Subject Name" | sort - Time</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="count">100</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="percentagesRow">false</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="rowNumbers">false</option>
+        <option name="totalsRow">false</option>
+        <option name="wrap">true</option>
+      </table>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>AD Group Adds by Subject Name- Last 24hrs</title>
+      <chart>
+        <search>
+          <query>index=kirby-windows-logs EventCode=4728 | eval Time=strftime(_time,"%x %r") | stats count by src_user</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
+        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
+        <option name="charting.axisTitleX.visibility">visible</option>
+        <option name="charting.axisTitleY.visibility">visible</option>
+        <option name="charting.axisTitleY2.visibility">visible</option>
+        <option name="charting.axisX.abbreviation">none</option>
+        <option name="charting.axisX.scale">linear</option>
+        <option name="charting.axisY.abbreviation">none</option>
+        <option name="charting.axisY.scale">linear</option>
+        <option name="charting.axisY2.abbreviation">none</option>
+        <option name="charting.axisY2.enabled">0</option>
+        <option name="charting.axisY2.scale">inherit</option>
+        <option name="charting.chart">pie</option>
+        <option name="charting.chart.bubbleMaximumSize">50</option>
+        <option name="charting.chart.bubbleMinimumSize">10</option>
+        <option name="charting.chart.bubbleSizeBy">area</option>
+        <option name="charting.chart.nullValueMode">gaps</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+        <option name="charting.chart.stackMode">default</option>
+        <option name="charting.chart.style">shiny</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.layout.splitSeries">0</option>
+        <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
+        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+        <option name="charting.legend.mode">standard</option>
+        <option name="charting.legend.placement">right</option>
+        <option name="charting.lineWidth">2</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+      </chart>
+    </panel>
+    <panel>
+      <title>AD Group Removals by Subject Name - Last 24hrs</title>
+      <chart>
+        <search>
+          <query>index=kirby-windows-logs EventCode=4729 | eval Time=strftime(_time,"%x %r") | stats count by src_user</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
+        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
+        <option name="charting.axisTitleX.visibility">visible</option>
+        <option name="charting.axisTitleY.visibility">visible</option>
+        <option name="charting.axisTitleY2.visibility">visible</option>
+        <option name="charting.axisX.abbreviation">none</option>
+        <option name="charting.axisX.scale">linear</option>
+        <option name="charting.axisY.abbreviation">none</option>
+        <option name="charting.axisY.scale">linear</option>
+        <option name="charting.axisY2.abbreviation">none</option>
+        <option name="charting.axisY2.enabled">0</option>
+        <option name="charting.axisY2.scale">inherit</option>
+        <option name="charting.chart">pie</option>
+        <option name="charting.chart.bubbleMaximumSize">50</option>
+        <option name="charting.chart.bubbleMinimumSize">10</option>
+        <option name="charting.chart.bubbleSizeBy">area</option>
+        <option name="charting.chart.nullValueMode">gaps</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+        <option name="charting.chart.stackMode">default</option>
+        <option name="charting.chart.style">shiny</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.layout.splitSeries">0</option>
+        <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
+        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+        <option name="charting.legend.mode">standard</option>
+        <option name="charting.legend.placement">right</option>
+        <option name="charting.lineWidth">2</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>AD Group Adds - Last 24hrs</title>
+      <table>
+        <search>
+          <query>index=kirby-windows-logs EventCode=4728 | eval Time=strftime(_time,"%x %r") | rename  user as "Target Name", src_user as "Subject Name" | table Time Group_Name "Target Name" "EventCodeDescription" "Subject Name" | sort - "Time"</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="count">100</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="percentagesRow">false</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="rowNumbers">false</option>
+        <option name="totalsRow">false</option>
+        <option name="wrap">true</option>
+      </table>
+    </panel>
+    <panel>
+      <title>AD Group Removal - Last 24hrs</title>
+      <table>
+        <search>
+          <query>index=kirby-windows-logs EventCode=4729 | eval Time=strftime(_time,"%x %r") | rename  user as "Target Name", src_user as "Subject Name" | table Time Group_Name "Target Name" "EventCodeDescription" "Subject Name" | sort - "Time"</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="count">100</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="percentagesRow">false</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="rowNumbers">false</option>
+        <option name="totalsRow">false</option>
+        <option name="wrap">true</option>
+      </table>
+    </panel>
+  </row>
+</dashboard>
