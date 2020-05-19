@@ -341,7 +341,7 @@
       </input>
       <table>
         <search>
-          <query>| tstats latest(tcpin.hostname) as hostname, latest(tcpin.sourcePort) as sourcePort ,latest(tcpin.destPort) as destPort,latest(tcpin.fwdType) as fwdType,latest(tcpin.sourceIp) as sourceIp,latest(tcpin.version) as version , latest(tcpin.os) as os, latest(tcpin.arch) as arch, latest(tcpin.tcp_KBps) as tcp_KBps, latest(tcpin.tcp_eps) as tcp_eps, latest(tcpin.guid) as guid from datamodel=cs_system_metrics.tcpin by host | eval source_uri = hostname.":".sourcePort | search [|inputlookup hosttype.csv | search hosttype=$tok_fwd_type$ | table hostname]
+          <query>| tstats  latest(tcpin.sourcePort) as sourcePort ,latest(tcpin.destPort) as destPort,latest(tcpin.fwdType) as fwdType,latest(tcpin.sourceIp) as sourceIp,latest(tcpin.version) as version , latest(tcpin.os) as os, latest(tcpin.arch) as arch, values(tcpin.tcp_KBps) as tcp_KBps, values(tcpin.tcp_eps) as tcp_eps, latest(tcpin.guid) as guid from datamodel=cs_system_metrics.tcpin by tcpin.hostname, host | rename tcpin.hostname as hostname | eval source_uri = hostname.":".sourcePort | search [|inputlookup hosttype.csv | search hosttype=$tok_fwd_type$ | table hostname]
 | eval dest_uri = host.":".destPort
 | eval connection = source_uri."-&gt;".dest_uri
 | stats values(fwdType) as fwdType, values(sourceIp) as sourceIp, last(version) as version,  values(os) as os, values(arch) as arch, dc(dest_uri) as dest_count, dc(connection) as connection_count, avg(tcp_KBps) as avg_tcp_kbps, avg(tcp_eps) as avg_tcp_eps by hostname, guid

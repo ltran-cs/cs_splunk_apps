@@ -1,0 +1,223 @@
+<dashboard theme="dark">
+    <label>Horseshoe Meter Gallery</label>
+    <row>
+        <panel>
+            <title>Default</title>
+            <viz type="horseshoe_meter_app.horseshoe_meter">
+                <search>
+                    <query>| inputlookup horseshoe_data.csv | head 30 | stats count</query>
+                    <earliest></earliest>
+                    <latest></latest>
+                </search>
+            </viz>
+        </panel>
+        <panel>
+            <title>Dark Theme</title>
+            <viz type="horseshoe_meter_app.horseshoe_meter">
+                <search>
+                    <query>| inputlookup horseshoe_data.csv | head 30 | stats count</query>
+                    <earliest></earliest>
+                    <latest></latest>
+                </search>
+                <option name="horseshoe_meter_app.horseshoe_meter.backgroundColor">#212527</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.dialColor">#818D99</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.maxRangeColor">#b44441</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.maxRangeThreshold">80</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.maxValue">100</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.midRangeColor">#fbcd2f</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.midRangeThreshold">55</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.minRangeColor">#3fc77a</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.minValue">0</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.thresholdStyle">percentage</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.useRangemap">false</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.valueColor">#fff</option>
+            </viz>
+        </panel>
+    </row>
+    <row>
+        <panel>
+            <title>3 Different Colors</title>
+            <viz type="horseshoe_meter_app.horseshoe_meter">
+                <search>
+                    <query>| inputlookup horseshoe_data.csv | head 30 | stats count</query>
+                    <earliest></earliest>
+                    <latest></latest>
+                </search>
+                <option name="horseshoe_meter_app.horseshoe_meter.maxValue">100</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.minValue">0</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.useRangemap">false</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.valueColor">#f58f39</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.dialColor">#6db7c6</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.backgroundColor">#555</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.thresholdStyle">percentage</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.minRangeColor">#3fc77a</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.midRangeThreshold">55</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.midRangeColor">#fbcd2f</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.maxRangeThreshold">80</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.maxRangeColor">#b44441</option>
+            </viz>
+        </panel>
+        <panel>
+            <title>Under label = 'buttercup'</title>
+            <viz type="horseshoe_meter_app.horseshoe_meter">
+                <search>
+                    <query>| inputlookup horseshoe_data.csv | head 30 | stats count</query>
+                    <earliest></earliest>
+                    <latest></latest>
+                </search>
+                <option name="horseshoe_meter_app.horseshoe_meter.maxValue">100</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.minValue">0</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.useRangemap">false</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.valueColor">#555</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.dialColor">#d0d5d9</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.backgroundColor">#FFF</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.thresholdStyle">percentage</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.minRangeColor">#3fc77a</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.midRangeThreshold">55</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.midRangeColor">#fbcd2f</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.maxRangeThreshold">80</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.maxRangeColor">#b44441</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.caption">buttercup</option>
+            </viz>
+        </panel>
+    </row>
+    <row>
+        <panel>
+            <title>Rangemap Green</title>
+            <viz type="horseshoe_meter_app.horseshoe_meter">
+                <search>
+                    <query>| inputlookup horseshoe_data.csv | head 30 | stats count</query>
+                    <earliest></earliest>
+                    <latest></latest>
+                </search>
+                <option name="horseshoe_meter_app.horseshoe_meter.maxValue">100</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.minValue">0</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.useRangemap">true</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.valueColor">#555</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.dialColor">#d0d5d9</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.backgroundColor">#FFF</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.thresholdStyle">percentage</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.minRangeColor">#3fc77a</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.midRangeThreshold">55</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.midRangeColor">#fbcd2f</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.maxRangeThreshold">80</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.maxRangeColor">#b44441</option>
+            </viz>
+        </panel>
+        <panel>
+            <title>Rangemap Yellow</title>
+            <viz type="horseshoe_meter_app.horseshoe_meter">
+                <search>
+                    <query>| inputlookup horseshoe_data.csv | head 60 | stats count</query>
+                    <earliest>0</earliest>
+                    <latest></latest>
+                </search>
+                <option name="horseshoe_meter_app.horseshoe_meter.maxValue">100</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.minValue">0</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.useRangemap">true</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.valueColor">#555</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.dialColor">#d0d5d9</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.backgroundColor">#FFF</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.thresholdStyle">percentage</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.minRangeColor">#3fc77a</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.midRangeThreshold">55</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.midRangeColor">#fbcd2f</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.maxRangeThreshold">80</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.maxRangeColor">#b44441</option>
+            </viz>
+        </panel>
+        <panel>
+            <title>Rangemap Red</title>
+            <viz type="horseshoe_meter_app.horseshoe_meter">
+                <search>
+                    <query>| inputlookup horseshoe_data.csv | head 90 | stats count</query>
+                    <earliest>0</earliest>
+                    <latest></latest>
+                </search>
+                <option name="horseshoe_meter_app.horseshoe_meter.maxValue">100</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.minValue">0</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.useRangemap">true</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.valueColor">#555</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.dialColor">#d0d5d9</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.backgroundColor">#FFF</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.thresholdStyle">percentage</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.minRangeColor">#3fc77a</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.midRangeThreshold">55</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.midRangeColor">#fbcd2f</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.maxRangeThreshold">80</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.maxRangeColor">#b44441</option>
+            </viz>
+        </panel>
+    </row>
+    <row>
+        <panel>
+            <title>Max value = 1000</title>
+            <viz type="horseshoe_meter_app.horseshoe_meter">
+                <search>
+                    <query>| inputlookup horseshoe_data.csv | head 30 | stats count</query>
+                    <earliest></earliest>
+                    <latest></latest>
+                </search>
+                <option name="horseshoe_meter_app.horseshoe_meter.maxValue">1000</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.minValue">0</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.useRangemap">false</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.valueColor">#555</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.dialColor">#d0d5d9</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.backgroundColor">#FFF</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.thresholdStyle">percentage</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.minRangeColor">#3fc77a</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.midRangeThreshold">55</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.midRangeColor">#fbcd2f</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.maxRangeThreshold">80</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.maxRangeColor">#b44441</option>
+            </viz>
+        </panel>
+        <panel>
+            <title>Min value = -100</title>
+            <viz type="horseshoe_meter_app.horseshoe_meter">
+                <search>
+                    <query>| inputlookup horseshoe_data.csv | head 1 | stats count</query>
+                    <earliest>0</earliest>
+                    <latest></latest>
+                </search>
+                <option name="horseshoe_meter_app.horseshoe_meter.maxValue">100</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.minValue">-100</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.useRangemap">false</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.valueColor">#555</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.dialColor">#d0d5d9</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.backgroundColor">#FFF</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.thresholdStyle">percentage</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.minRangeColor">#3fc77a</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.midRangeThreshold">55</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.midRangeColor">#fbcd2f</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.maxRangeThreshold">80</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.maxRangeColor">#b44441</option>
+            </viz>
+        </panel>
+    </row>
+    <row>
+        <panel>
+            <title>Horseshoe Meter with Trellis Layout</title>
+            <viz type="horseshoe_meter_app.horseshoe_meter">
+                <search>
+                    <query>| inputlookup horseshoe_data.csv
+                        | head 100
+                        | eval rnd = random() % 10
+                        | rangemap field=rnd "Site 1"=0-2 "Site 2"=3-5 "Site 3"=6-8 default="Site 4"
+                        | stats avg(value) as count by range
+                        | eval count = round(count)</query>
+                    <earliest>0</earliest>
+                    <latest></latest>
+                    <sampleRatio>1</sampleRatio>
+                </search>
+                <option name="drilldown">none</option>
+                <option name="height">233</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.backgroundColor">#FFF</option>
+                <option name="horseshoe_meter_app.horseshoe_meter.maxValue">10000</option>
+                <option name="trellis.enabled">1</option>
+                <option name="trellis.scales.shared">1</option>
+                <option name="trellis.size">medium</option>
+            </viz>
+        </panel>
+    </row>
+</dashboard>

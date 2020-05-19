@@ -34,20 +34,7 @@ export = system
 access = read : [ * ], write : [ * ]
 export = system
 
+### Visualizations
 
-[views/system_metrics]
-access = read : [ * ], write : [ admin ]
+[visualizations/horseshoe_meter]
 export = system
-
-[views/license_metrics]
-access = read : [ * ], write : [ admin ]
-export = system
-
-[views/alerting_metrics]
-access = read : [ * ], write : [ admin]
-export = system
-
-[transforms/hosttype]
-access = read : [ * ], write : [ admin ]
-export = system
-
